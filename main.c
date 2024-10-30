@@ -1,23 +1,45 @@
 #include "kvs.h"
-
-int main()
-{
-	kvs_t* kvs = open();
-
-	if(!kvs) {
-		printf("Failed to open kvs\n");
-		return -1;
-	}
-
-	// workload execution  
-	
-	// 1) 	file read 
-	// 2) 	if put, insert (key, value) into kvs.
-	// 		if get, seach the key in kvs and return the value. 
-	//		Return -1 if the key is not found  
-
-
-	close(kvs);
-	
-	return 0;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+int main() {
+    kvs_t* kvs = open();
+    if (!kvs) {
+        return -1;
+    }
+    FILE *inputFile = fopen("query.dat", "r");
+    FILE *outputFile = fopen("answer.dat", "w");
+    if (!inputFile || !outputFile) {
+        close(kvs);
+        return -1;
+    }
+    char line[256];
+    while (fgets(line, sizeof(line), inputFile)) {
+        char operation[10], key[100], value[100];
+        int result;
+        operation[0] = key[0] = value[0] = '\0';
+        int tokenCount = sscanf(line, "%9[^,],%99[^,],%99s", operation, key, value);
+        if (tokenCount < 2) {
+            continue;
+        }
+        if (strcmp(operation, "set") == 0 && tokenCount == 3) {
+            result = put(kvs, key, value);
+            if (result == -1) {
+                fprintf(outputFile, "%s\n", key);
+            }
+        } else if (strcmp(operation, "get") == 0 && tokenCount >= 2) {
+            char* returnValue = get(kvs, key);
+            if (returnValue) {
+                fprintf(outputFile, "%s\n", returnValue);
+                free(returnValue);
+            } else {
+                fprintf(outputFile, "-1\n");
+            }
+        }
+    }
+    fclose(inputFile);
+    fclose(outputFile);
+    close(kvs);
+    return 0;
 }
+
