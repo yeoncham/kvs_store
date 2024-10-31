@@ -3,7 +3,7 @@
 #include <stdlib.h>
 char* get(kvs_t* kvs, const char* key) {
     // 주어진 키에 대응하는 값을 찾음
-    if (!kvs || !key) 
+    if (kvs == NULL || key == NULL) 
 	    return NULL;
     node_t* current = kvs->head;
     for (int level = MAX_LEVEL - 1; level >= 0; level--) {

@@ -29,8 +29,7 @@ $(TARG_DYNAMIC): $(OBJS) $(LARSO)
 	$(CC) -o $(TARG_DYNAMIC) $(OBJS) $(LIBS)
 
 $(LARSO): $(LOBJS)
-	ar rs $(LARSO) $(LOBJS)
-
+	$(CC) -shared -o $(LARSO) $(LOBJS)
 
 clean:
 	rm -f $(OBJS) $(LOBJS) $(LARS) $(LARSO) $(TARG) $(TARG_DYNAMIC)

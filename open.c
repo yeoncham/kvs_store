@@ -4,11 +4,11 @@
 // 키-값 저장소를 초기화하고 kvs_t 구조체의 포인터를 반환:
 kvs_t* open() {
     kvs_t* kvs = (kvs_t*)malloc(sizeof(kvs_t));
-    if (!kvs) {
+    if (kvs == NULL) {
         return NULL;
     }
     kvs->head = (node_t*)malloc(sizeof(node_t));
-    if (!kvs->head) {
+    if (kvs->head == NULL) {
         free(kvs);
         return NULL;
     }

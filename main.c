@@ -4,21 +4,23 @@
 #include <string.h>
 int main() {
     kvs_t* kvs = open();
-    if (!kvs) {
+    if (kvs == NULL) {
         return -1;
     }
     FILE *inputFile = fopen("query.dat", "r");
     FILE *outputFile = fopen("answer.dat", "w");
-    if (!inputFile || !outputFile) {
+    if (inputFile == NULL || outputFile == NULL) {
         close(kvs);
         return -1;
     }
-    char line[256];
-    while (fgets(line, sizeof(line), inputFile)) {
+    char buffer[256];
+    while (fgets(buffer, sizeof(buffer), inputFile)) {
         char operation[10], key[100], value[100];
         int result;
-        operation[0] = key[0] = value[0] = '\0';
-        int tokenCount = sscanf(line, "%9[^,],%99[^,],%99s", operation, key, value);
+        operation[0] = '\0';
+	key[0] = '\0'; 
+	value[0] = '\0';
+        int tokenCount = sscanf(buffer, "%9[^,],%99[^,],%99s", operation, key, value);
         if (tokenCount < 2) {
             continue;
         }
